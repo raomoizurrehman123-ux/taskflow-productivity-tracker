@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A simple productivity tracker to plan, organize, and complete your tasks." />
+  <meta name="theme-color" content="#10151d" />
+  <title>TaskFlow | Productivity Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-icon">✓</span> taskflow<span>.</span></a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Task filters">
+        <button class="nav-item active" data-filter="all"><span>▦</span> All tasks <b id="allCount">0</b></button>
+        <button class="nav-item" data-filter="active"><span>◷</span> Active <b id="activeCount">0</b></button>
+        <button class="nav-item" data-filter="completed"><span>✓</span> Completed <b id="completedCount">0</b></button>
+      </nav>
+      <div class="sidebar-label category-label">CATEGORIES</div>
+      <nav class="side-nav" aria-label="Category filters">
+        <button class="nav-item category-nav" data-category="Work"><span class="category-dot work"></span> Work</button>
+        <button class="nav-item category-nav" data-category="Personal"><span class="category-dot personal"></span> Personal</button>
+        <button class="nav-item category-nav" data-category="Study"><span class="category-dot study"></span> Study</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="storage-card"><span class="storage-icon">◈</span><div><strong>Your tasks stay yours</strong><small>Saved locally in this browser.</small></div></div>
+        <div class="profile"><div class="avatar">TF</div><div><strong>My Workspace</strong><small>Personal productivity</small></div><span class="profile-menu">•••</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div><div class="date-label" id="todayLabel">YOUR WORKSPACE</div><h1 id="pageTitle">All tasks</h1></div>
+        <div class="top-actions"><span class="save-indicator"><i></i> Saved locally</span><button class="mobile-add" id="mobileAdd">+ Add task</button></div>
+      </header>
+
+      <section class="welcome-row">
+        <div><p class="welcome-title">Make today count<span>.</span></p><p class="welcome-subtitle">A little progress each day adds up.</p></div>
+        <div class="progress-summary"><div class="progress-copy"><span>DAILY PROGRESS</span><strong id="progressText">0%</strong></div><div class="progress-track"><div id="progressBar"></div></div></div>
+      </section>
+
+      <section class="stats-grid" aria-label="Task summary">
+        <article class="stat-card"><div class="stat-top"><span>Total tasks</span><span class="stat-symbol">▦</span></div><strong id="totalStat">0</strong><small>Tasks in your workspace</small></article>
+        <article class="stat-card"><div class="stat-top"><span>In progress</span><span class="stat-symbol amber">◷</span></div><strong id="activeStat">0</strong><small>Still to be done</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Completed</span><span class="stat-symbol green">✓</span></div><strong id="doneStat">0</strong><small>Great work, keep going</small></article>
+        <article class="stat-card"><div class="stat-top"><span>Overdue</span><span class="stat-symbol red">!</span></div><strong id="overdueStat">0</strong><small>Past due date and active</small></article>
+      </section>
+
+      <section class="task-section">
+        <div class="section-head"><div><h2>Your tasks</h2><p>Keep track of what needs your attention.</p></div><button class="primary-button" id="addTaskButton">+ Add new task</button></div>
+        <div class="toolbar">
+          <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search tasks..." aria-label="Search tasks"></label>
+          <label class="sort-control"><span>Sort:</span><select id="sortSelect" aria-label="Sort tasks"><option value="created">Recently added</option><option value="due">Due date</option><option value="az">Name A to Z</option></select></label>
+          <button class="filter-chip selected" data-filter="all">All</button><button class="filter-chip" data-filter="active">Active</button><button class="filter-chip" data-filter="completed">Completed</button>
+        </div>
+        <div class="task-list" id="taskList" aria-live="polite"></div>
+        <div class="list-footer"><span id="shownCount">Showing 0 tasks</span><button id="clearCompleted" class="clear-button">Clear completed</button></div>
+      </section>
+      <footer class="footer-note">Built for focus. Your data is stored on this device.</footer>
+    </main>
+  </div>
+
+  <dialog class="task-dialog" id="taskDialog">
+    <form id="taskForm">
+      <div class="dialog-head"><div><span class="eyebrow">TASK DETAILS</span><h2 id="dialogTitle">Create a task</h2></div><button type="button" class="close-button" id="closeDialog" aria-label="Close">×</button></div>
+      <label class="field-label" for="taskTitle">Task name <span>*</span></label>
+      <input class="text-field" id="taskTitle" name="title" maxlength="100" placeholder="What do you need to do?" required />
+      <label class="field-label" for="taskDescription">Description <small>Optional</small></label>
+      <textarea class="text-field description-field" id="taskDescription" name="description" rows="3" maxlength="300" placeholder="Add a few details..."></textarea>
+      <div class="field-row">
+        <div><label class="field-label" for="taskCategory">Category</label><select class="text-field" id="taskCategory" name="category"><option>Work</option><option>Personal</option><option>Study</option></select></div>
+        <div><label class="field-label" for="taskDue">Due date</label><input class="text-field" id="taskDue" name="due" type="date" /></div>
+      </div>
+      <div class="dialog-actions"><button type="button" class="secondary-button" id="cancelDialog">Cancel</button><button class="primary-button" type="submit" id="submitTask">Create task</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/script.js"></script>
+</body>
+</html>
